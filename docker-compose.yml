@@ -10,9 +10,33 @@ services:
     volumes:
       - ./data:/app/data
       - ./config.yaml:/app/config.yaml:ro
-      - ./.env:/app/.env:ro
     env_file:
       - .env
     environment:
       - NODE_ENV=production
       - LOG_LEVEL=info
+    # Allow container to reach Ollama running on the host machine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Optional: Run Ollama alongside HydraClaw
+  # Uncomment to use a containerized Ollama instance
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: hydraclaw-ollama
+  #   restart: unless-stopped
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   # Uncomment for GPU support (NVIDIA)
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - driver: nvidia
+  #   #           count: all
+  #   #           capabilities: [gpu]
+
+# volumes:
+#   ollama_data:

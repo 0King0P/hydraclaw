@@ -78,14 +78,18 @@ RUN pnpm install --frozen-lockfile || pnpm install
 # Copy source code
 COPY . .
 
-# Build all packages
-RUN pnpm build
+# Clean build (remove stale tsbuildinfo to prevent cache issues)
+RUN find . -name "tsconfig.tsbuildinfo" -delete && pnpm build
 
 # Create data directory
 RUN mkdir -p /app/data
 
 # Expose ports
 EXPOSE 3000 3001 9876
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
 
 # Run the gateway
 CMD ["node", "packages/cli/dist/index.js", "start"]

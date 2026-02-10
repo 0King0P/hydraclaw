@@ -233,11 +233,25 @@ export function createOpenAICompatProvider(cfg: OpenAICompatConfig): AIProvider 
           }
           if (fetched.length > 0) {
             resolvedModels = fetched;
+            logger.info('Discovered %d models from %s', fetched.length, baseURL);
           } else {
             resolvedModels = cfg.dynamicModels.fallback;
+            logger.info('No models found at %s, using %d fallback models', baseURL, cfg.dynamicModels.fallback.length);
           }
-        } catch {
-          logger.warn('Could not fetch models from %s, using fallback list', baseURL);
+        } catch (err) {
+          const errStr = String(err);
+          if (errStr.includes('ECONNREFUSED') || errStr.includes('fetch failed')) {
+            logger.warn(
+              'Cannot reach %s at %s - make sure the server is running',
+              cfg.name,
+              baseURL,
+            );
+            if (cfg.id === 'ollama') {
+              logger.warn('Start Ollama with: ollama serve');
+            }
+          } else {
+            logger.warn('Could not fetch models from %s: %s', baseURL, errStr);
+          }
           resolvedModels = cfg.dynamicModels.fallback;
         }
       }

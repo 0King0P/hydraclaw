@@ -22,6 +22,9 @@ export interface AgentRunOptions {
   provider?: AIProvider;
   model?: string;
   onStream?: (chunk: StreamChunk) => void;
+  onToolStart?: (toolName: string, iteration: number) => void;
+  onToolEnd?: (toolName: string, iteration: number, success: boolean) => void;
+  onIterationStart?: (iteration: number, maxIterations: number) => void;
 }
 
 export interface AgentRunResult {
@@ -29,6 +32,8 @@ export interface AgentRunResult {
   toolCalls?: Array<{ id: string; name: string; arguments: string }>;
   model: string;
   provider: string;
+  iterations: number;
+  totalToolCalls: number;
 }
 
 export class Agent {
@@ -79,9 +84,6 @@ export class Agent {
     };
 
     this.conversation.addMessage(conversationId, userMessage);
-    const messages = this.conversation.buildMessages(conversationId, userMessage);
-    // Remove the last user message since buildMessages already includes history + new message
-    // but we've also already added it to history, so just use buildMessages output
     const builtMessages = this.conversation.buildMessages(conversationId, userMessage);
 
     const tools = this.getToolDefinitions();
@@ -101,12 +103,12 @@ export class Agent {
     let result: AgentRunResult;
 
     try {
-      result = await this.executeWithToolLoop(provider, request, conversationId, onStream);
+      result = await this.executeWithToolLoop(provider, request, conversationId, opts);
     } catch (err) {
       this.logger.error(`Agent run failed: ${err}`);
 
       // Try failover
-      const failoverResult = await this.tryFailover(request, conversationId, onStream, provider.id);
+      const failoverResult = await this.tryFailover(request, conversationId, opts, provider.id);
       if (failoverResult) {
         result = failoverResult;
       } else {
@@ -135,14 +137,22 @@ export class Agent {
     provider: AIProvider,
     request: CompletionRequest,
     conversationId: string,
-    onStream?: (chunk: StreamChunk) => void,
+    opts: AgentRunOptions,
     maxIterations: number = 10,
   ): Promise<AgentRunResult> {
+    const { onStream, onToolStart, onToolEnd, onIterationStart } = opts;
     let currentRequest = { ...request };
     let iteration = 0;
+    let totalToolCalls = 0;
 
     while (iteration < maxIterations) {
       iteration++;
+
+      if (onIterationStart) {
+        onIterationStart(iteration, maxIterations);
+      }
+
+      this.logger.debug(`Tool loop iteration ${iteration}/${maxIterations}`);
       const collector = createStreamCollector();
 
       for await (const chunk of provider.stream(currentRequest)) {
@@ -160,20 +170,46 @@ export class Agent {
           content: collector.fullText,
           model: request.model,
           provider: provider.id,
+          iterations: iteration,
+          totalToolCalls,
         };
       }
 
       // Execute tool calls
       const toolResults: ToolResult[] = [];
       for (const tc of collector.toolCalls) {
+        totalToolCalls++;
+        const toolName = tc.name;
+
+        if (onToolStart) {
+          onToolStart(toolName, iteration);
+        }
+
         await this.bus.emit(Events.TOOL_CALL, tc);
-        const result = await this.executeTool({
-          id: tc.id,
-          name: tc.name,
-          arguments: JSON.parse(tc.arguments),
-        });
-        toolResults.push(result);
-        await this.bus.emit(Events.TOOL_RESULT, result);
+        this.logger.info(`Executing tool: ${toolName} (iteration ${iteration}/${maxIterations})`);
+
+        let success = true;
+        try {
+          const result = await this.executeTool({
+            id: tc.id,
+            name: tc.name,
+            arguments: JSON.parse(tc.arguments),
+          });
+          toolResults.push(result);
+          if (result.isError) success = false;
+          await this.bus.emit(Events.TOOL_RESULT, result);
+        } catch (err) {
+          success = false;
+          toolResults.push({
+            toolCallId: tc.id,
+            content: `Tool execution error: ${err}`,
+            isError: true,
+          });
+        }
+
+        if (onToolEnd) {
+          onToolEnd(toolName, iteration, success);
+        }
       }
 
       // Add assistant message with tool calls and tool results to conversation
@@ -197,10 +233,13 @@ export class Agent {
       ];
     }
 
+    this.logger.warn(`Tool loop reached max iterations (${maxIterations})`);
     return {
-      content: 'Max tool iterations reached.',
+      content: `I've reached the maximum number of tool execution steps (${maxIterations}). Here's what I accomplished so far. If you need me to continue, please send another message.`,
       model: request.model,
       provider: provider.id,
+      iterations: iteration,
+      totalToolCalls,
     };
   }
 
@@ -225,17 +264,21 @@ export class Agent {
         try {
           return await t.execute(call);
         } catch (err) {
+          this.logger.error(`Tool '${call.name}' threw an error: ${err}`);
           return {
             toolCallId: call.id,
-            content: `Tool error: ${err}`,
+            content: `Tool '${call.name}' error: ${err}`,
             isError: true,
           };
         }
       }
     }
+
+    this.logger.warn(`Tool not found: ${call.name}`);
+    const availableTools = this.getToolDefinitions().map(d => d.name);
     return {
       toolCallId: call.id,
-      content: `Unknown tool: ${call.name}`,
+      content: `Unknown tool: ${call.name}. Available tools: ${availableTools.join(', ') || 'none'}`,
       isError: true,
     };
   }
@@ -243,7 +286,7 @@ export class Agent {
   private async tryFailover(
     request: CompletionRequest,
     conversationId: string,
-    onStream?: (chunk: StreamChunk) => void,
+    opts: AgentRunOptions,
     failedProviderId?: string,
   ): Promise<AgentRunResult | null> {
     const failoverProviders = this.config.failoverProviders ?? [];
@@ -262,7 +305,7 @@ export class Agent {
           provider as AIProvider,
           request,
           conversationId,
-          onStream,
+          opts,
         );
       } catch (err) {
         this.logger.warn(`Failover to ${providerId} also failed: ${err}`);
@@ -277,7 +320,8 @@ export class Agent {
     if (!provider) {
       // Try first available
       const first = this.registry.providers.values().next().value;
-      if (!first) throw new Error('No AI providers registered');
+      if (!first) throw new Error('No AI providers registered. Configure at least one provider in config.yaml or run: hydraclaw setup');
+      this.logger.info(`Default provider '${this.config.defaultProvider}' not found, using '${(first as AIProvider).id}'`);
       return first as AIProvider;
     }
     return provider as AIProvider;

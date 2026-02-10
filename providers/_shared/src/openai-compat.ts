@@ -240,7 +240,7 @@ export function createOpenAICompatProvider(cfg: OpenAICompatConfig): AIProvider 
           }
         } catch (err) {
           const errStr = String(err);
-          if (errStr.includes('ECONNREFUSED') || errStr.includes('fetch failed')) {
+          if (errStr.includes('ECONNREFUSED') || errStr.includes('fetch failed') || errStr.includes('Connection error')) {
             logger.warn(
               'Cannot reach %s at %s - make sure the server is running',
               cfg.name,

@@ -771,7 +771,7 @@ export function createProgram(): Command {
         console.error(chalk.red(`\nError: ${errStr}`));
 
         // Provide helpful guidance based on common errors
-        if (errStr.includes('ECONNREFUSED') || errStr.includes('fetch failed')) {
+        if (errStr.includes('ECONNREFUSED') || errStr.includes('fetch failed') || errStr.includes('Connection error')) {
           console.error(chalk.dim('\nThe provider endpoint is not reachable.'));
           if (providerId === 'ollama') {
             console.error(chalk.dim('Make sure Ollama is running: ') + chalk.cyan('ollama serve'));

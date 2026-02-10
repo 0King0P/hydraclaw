@@ -1,6 +1,6 @@
 # HydraClaw
 
-Multi-headed AI assistant platform. 15 AI providers, 18 messaging channels, 12 automation tools, built-in security scanning.
+Multi-headed AI assistant platform. 14 AI providers, 18 messaging channels, 12 automation tools, built-in security scanning.
 
 ## Quick Start
 
@@ -12,7 +12,7 @@ node packages/cli/dist/index.js start
 
 ## Features
 
-**AI Providers (15):** Anthropic, OpenAI, Google, Mistral, Cohere, Groq, Together, OpenRouter, DeepSeek, xAI, Perplexity, Ollama, LM Studio, vLLM
+**AI Providers (14):** Anthropic, OpenAI, Google, Mistral, Cohere, Groq, Together, OpenRouter, DeepSeek, xAI, Perplexity, Ollama, LM Studio, vLLM
 
 **Channels (18):** Telegram, Discord, WhatsApp, Slack, Signal, iMessage, Matrix, Email, IRC, XMPP, Reddit, Twitter, Mastodon, Bluesky, LINE, Teams, WebChat, Zalo
 
@@ -26,7 +26,6 @@ Copy the example config and add your API keys:
 
 ```bash
 cp config.example.yaml config.yaml
-cp .env.example .env
 ```
 
 Or set environment variables directly:
@@ -84,7 +83,7 @@ packages/
   cli/        # Commander.js CLI
   security/   # Prompt injection detection, tool policies, scanner, audit
 
-providers/    # 15 AI provider plugins
+providers/    # 14 AI provider plugins
 channels/     # 18 messaging channel plugins
 tools/        # 12 automation tool plugins
 ui/           # Web chat UI

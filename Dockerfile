@@ -19,6 +19,7 @@ COPY packages/store/package.json packages/store/
 COPY packages/agent/package.json packages/agent/
 COPY packages/gateway/package.json packages/gateway/
 COPY packages/cli/package.json packages/cli/
+COPY packages/security/package.json packages/security/
 
 # Copy provider package.json files
 COPY providers/anthropic/package.json providers/anthropic/

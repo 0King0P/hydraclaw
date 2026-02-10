@@ -1,0 +1,10 @@
+{
+  "name": "@hydraclaw/ui",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Serve ui/src/index.html directly or use a static server'",
+    "build": "echo 'No build step needed - vanilla HTML/CSS/JS'"
+  }
+}

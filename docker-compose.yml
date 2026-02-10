@@ -1,0 +1,18 @@
+services:
+  hydraclaw:
+    build: .
+    container_name: hydraclaw
+    restart: unless-stopped
+    ports:
+      - "3000:3000"   # HTTP API
+      - "3001:3001"   # WebSocket
+      - "9876:9876"   # Webhooks
+    volumes:
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+      - ./.env:/app/.env:ro
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info

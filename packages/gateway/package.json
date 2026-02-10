@@ -1,0 +1,23 @@
+{
+  "name": "@hydraclaw/gateway",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist" },
+  "dependencies": {
+    "@hydraclaw/core": "workspace:*",
+    "@hydraclaw/agent": "workspace:*",
+    "@hydraclaw/store": "workspace:*",
+    "express": "^5.1.0",
+    "ws": "^8.18.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "@types/express": "^5.0.0",
+    "@types/ws": "^8.5.0",
+    "@types/cors": "^2.8.0"
+  }
+}

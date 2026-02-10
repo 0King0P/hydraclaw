@@ -1,0 +1,7 @@
+approvals:
+  better-sqlite3@11.10.0: true
+  cpu-features@0.0.10: true
+  ssh2@1.17.0: true
+  protobufjs@6.8.8: true
+  protobufjs@7.5.4: true
+  core-js@3.48.0: true

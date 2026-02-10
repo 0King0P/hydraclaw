@@ -1,0 +1,7 @@
+packages:
+  - packages/*
+  - providers/*
+  - providers/_shared
+  - channels/*
+  - tools/*
+  - ui

@@ -1,0 +1,11 @@
+export { SecurityGuard } from './security-guard.js';
+export { PromptInjectionDetector } from './injection/detector.js';
+export { INJECTION_PATTERNS } from './injection/patterns.js';
+export type { InjectionPattern } from './injection/patterns.js';
+export { ToolPolicyEngine } from './policy/engine.js';
+export { AuditLogger } from './audit/logger.js';
+export { VulnerabilityScanner } from './scanner/scanner.js';
+export { formatReport } from './scanner/report.js';
+export type { SecurityConfig, ShellPolicy, FilesystemPolicy, BrowserPolicy, CodeRunnerPolicy, DatabasePolicy } from './config.js';
+export { DEFAULT_SECURITY_CONFIG } from './config.js';
+export type { SecurityVerdict, SecurityDetection, PolicyViolation, AuditEvent, ScanFinding, ScanReport, MessageScanResult, SecurityAction } from './types.js';

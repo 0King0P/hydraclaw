@@ -1,0 +1,18 @@
+{
+  "name": "hydraclaw",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Multi-headed AI assistant platform - unfiltered, multi-provider, multi-channel",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "start": "node packages/cli/dist/index.js",
+    "test": "vitest",
+    "lint": "eslint .",
+    "clean": "pnpm -r clean"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

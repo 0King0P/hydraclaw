@@ -4,7 +4,7 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist" },
+  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist tsconfig.tsbuildinfo" },
   "dependencies": {
     "@hydraclaw/core": "workspace:*",
     "dockerode": "^4.0.4"

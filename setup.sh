@@ -136,18 +136,33 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 4: Install project dependencies
+# Step 4: Install project dependencies + native modules
 # ---------------------------------------------------------------------------
 step "Step 4/6 - Installing project dependencies"
 
 info "Running pnpm install (this may take a minute)..."
 pnpm install --frozen-lockfile 2>/dev/null || pnpm install
+
+# Native modules (better-sqlite3, cpu-features, ssh2) need their build
+# scripts to run. If they were blocked, force a reinstall to compile them.
+if [ ! -d node_modules/.pnpm/better-sqlite3*/node_modules/better-sqlite3/prebuilds ] && \
+   [ ! -d node_modules/.pnpm/better-sqlite3*/node_modules/better-sqlite3/build ]; then
+    info "Rebuilding native modules (better-sqlite3, ssh2)..."
+    pnpm install --force 2>/dev/null || true
+fi
 success "Dependencies installed"
 
 # ---------------------------------------------------------------------------
 # Step 5: Build the project
 # ---------------------------------------------------------------------------
 step "Step 5/6 - Building HydraClaw"
+
+# Clean stale incremental build caches that can cause tsc to skip emitting
+# output files (TypeScript composite builds use tsconfig.tsbuildinfo to track
+# what's already built -- if dist/ was removed but tsbuildinfo wasn't, tsc
+# thinks everything is up to date and emits nothing).
+info "Cleaning stale build artifacts..."
+pnpm clean 2>/dev/null || true
 
 info "Compiling TypeScript across all packages..."
 pnpm build

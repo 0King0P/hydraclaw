@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": { "hydraclaw": "dist/index.js" },
-  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist" },
+  "scripts": { "build": "tsc", "dev": "tsc --watch", "clean": "rm -rf dist tsconfig.tsbuildinfo" },
   "dependencies": {
     "@hydraclaw/core": "workspace:*",
     "@hydraclaw/agent": "workspace:*",

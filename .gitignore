@@ -5,3 +5,4 @@ tsconfig.tsbuildinfo
 data/
 *.env
 config.yaml
+config.yaml.bak

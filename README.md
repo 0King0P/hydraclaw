@@ -4,9 +4,20 @@ Multi-headed AI assistant platform. 14 AI providers, 18 messaging channels, 12 a
 
 ## Quick Start
 
+**Debian/Ubuntu (one command):**
+
+```bash
+chmod +x setup.sh && ./setup.sh
+```
+
+The script installs Node.js 22, pnpm, all system deps, builds everything, and creates your config files. See [INSTALL.md](INSTALL.md) for the full guide.
+
+**Manual (if you already have Node.js 22 and pnpm):**
+
 ```bash
 pnpm install
-pnpm -r build
+pnpm build
+cp config.example.yaml config.yaml
 node packages/cli/dist/index.js start
 ```
 

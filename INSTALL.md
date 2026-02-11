@@ -4,6 +4,35 @@ A step-by-step guide for installing, configuring, and running HydraClaw on your 
 
 ---
 
+## Quick Setup (Debian/Ubuntu) -- One Command
+
+On a Debian or Ubuntu system, run the setup script from the project root. It handles **everything** -- system packages, Node.js 22, pnpm, dependencies, building, and config:
+
+```bash
+git clone https://github.com/your-org/hydraclaw.git
+cd hydraclaw
+chmod +x setup.sh && ./setup.sh
+```
+
+That's it. When it finishes, add an API key to `.env` and start the server:
+
+```bash
+nano .env                                      # add at least one API key
+node packages/cli/dist/index.js start          # start HydraClaw
+```
+
+> **What the script does (6 steps, fully automated):**
+> 1. Installs system dependencies (`curl`, `git`, `python3`, `build-essential`)
+> 2. Installs Node.js 22 via NodeSource (skips if already present)
+> 3. Installs pnpm via corepack (skips if already present)
+> 4. Runs `pnpm install` for all workspace packages
+> 5. Builds every package (`pnpm build`)
+> 6. Creates `config.yaml` and `.env` from templates
+
+If you prefer a manual installation or are on a different OS, continue reading below.
+
+---
+
 ## Table of Contents
 
 1. [Prerequisites](#1-prerequisites)

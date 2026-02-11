@@ -4,13 +4,20 @@ Multi-headed AI assistant platform. 14 AI providers, 18 messaging channels, 12 a
 
 ## Quick Start
 
-**Debian/Ubuntu (one command):**
+**Debian/Ubuntu with Ollama (no API key needed):**
+
+```bash
+chmod +x setup.sh && ./setup.sh --ollama
+```
+
+**Debian/Ubuntu with cloud AI (Anthropic, OpenAI, etc.):**
 
 ```bash
 chmod +x setup.sh && ./setup.sh
+nano .env   # add your API key
 ```
 
-The script installs Node.js 22, pnpm, all system deps, builds everything, and creates your config files. See [INSTALL.md](INSTALL.md) for the full guide.
+See [INSTALL.md](INSTALL.md) for the full guide.
 
 **Manual (if you already have Node.js 22 and pnpm):**
 

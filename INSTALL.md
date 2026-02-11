@@ -6,7 +6,22 @@ A step-by-step guide for installing, configuring, and running HydraClaw on your 
 
 ## Quick Setup (Debian/Ubuntu) -- One Command
 
-On a Debian or Ubuntu system, run the setup script from the project root. It handles **everything** -- system packages, Node.js 22, pnpm, dependencies, building, and config:
+### Option A: Local AI with Ollama (no API key needed)
+
+```bash
+git clone https://github.com/your-org/hydraclaw.git
+cd hydraclaw
+chmod +x setup.sh && ./setup.sh --ollama
+```
+
+That's it. The script installs everything **including Ollama and a model**. When it finishes:
+
+```bash
+node packages/cli/dist/index.js start          # start the server
+node packages/cli/dist/index.js chat "Hello"   # or test from the terminal
+```
+
+### Option B: Cloud AI (Anthropic, OpenAI, etc.)
 
 ```bash
 git clone https://github.com/your-org/hydraclaw.git
@@ -14,20 +29,21 @@ cd hydraclaw
 chmod +x setup.sh && ./setup.sh
 ```
 
-That's it. When it finishes, add an API key to `.env` and start the server:
+When it finishes, add an API key and start:
 
 ```bash
 nano .env                                      # add at least one API key
 node packages/cli/dist/index.js start          # start HydraClaw
 ```
 
-> **What the script does (6 steps, fully automated):**
+> **What the script does (fully automated):**
 > 1. Installs system dependencies (`curl`, `git`, `python3`, `build-essential`)
 > 2. Installs Node.js 22 via NodeSource (skips if already present)
 > 3. Installs pnpm via corepack (skips if already present)
 > 4. Runs `pnpm install` for all workspace packages
 > 5. Builds every package (`pnpm build`)
 > 6. Creates `config.yaml` and `.env` from templates
+> 7. **With `--ollama`:** Installs Ollama, pulls `qwen2.5:0.5b`, configures it as default
 
 If you prefer a manual installation or are on a different OS, continue reading below.
 

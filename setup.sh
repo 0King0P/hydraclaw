@@ -3,15 +3,24 @@
 # HydraClaw - One-Command Setup for Debian/Ubuntu
 #
 # Usage:
-#   chmod +x setup.sh && ./setup.sh
+#   chmod +x setup.sh && ./setup.sh            # basic install
+#   chmod +x setup.sh && ./setup.sh --ollama   # install + Ollama (no API key needed)
 #
 # This script installs all system dependencies, Node.js 22, pnpm,
 # project packages, builds the project, creates a default config,
-# and starts the gateway server.
+# and optionally sets up Ollama for local AI with no API keys required.
 #
 # Tested on: Debian 11/12, Ubuntu 22.04/24.04
 
 set -euo pipefail
+
+# Parse flags
+USE_OLLAMA=false
+for arg in "$@"; do
+    case "$arg" in
+        --ollama) USE_OLLAMA=true ;;
+    esac
+done
 
 # ---------------------------------------------------------------------------
 # Colors for output
@@ -217,6 +226,49 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# Optional: Install and configure Ollama (--ollama flag)
+# ---------------------------------------------------------------------------
+if [ "$USE_OLLAMA" = true ]; then
+    step "Bonus - Setting up Ollama (local AI, no API key needed)"
+
+    if command -v ollama &>/dev/null; then
+        success "Ollama already installed ($(ollama --version 2>&1 | grep -oP '[\d.]+' | head -1))"
+    else
+        info "Installing Ollama..."
+        curl -fsSL https://ollama.com/install.sh | sh
+        success "Ollama installed"
+    fi
+
+    # Start Ollama server if not running
+    if ! curl -sf http://localhost:11434/api/tags &>/dev/null; then
+        info "Starting Ollama server..."
+        ollama serve &>/dev/null &
+        sleep 3
+    fi
+    success "Ollama server running"
+
+    # Pull a capable model (qwen2.5 supports tool calling)
+    OLLAMA_MODEL="qwen2.5:0.5b"
+    if ollama list 2>/dev/null | grep -q "$OLLAMA_MODEL"; then
+        success "Model $OLLAMA_MODEL already downloaded"
+    else
+        info "Pulling model $OLLAMA_MODEL (this may take a minute)..."
+        ollama pull "$OLLAMA_MODEL"
+        success "Model $OLLAMA_MODEL ready"
+    fi
+
+    # Patch config.yaml to use Ollama as default
+    if [ -f config.yaml ]; then
+        sed -i 's/defaultProvider: "anthropic"/defaultProvider: "ollama"/' config.yaml
+        sed -i 's/defaultModel: "claude-sonnet-4-5-20250929"/defaultModel: "qwen2.5:0.5b"/' config.yaml
+        # Uncomment Ollama provider if commented
+        sed -i 's/^  # ollama:/  ollama:/' config.yaml
+        sed -i 's/^  #   baseUrl: "http:\/\/localhost:11434\/v1"/    baseUrl: "http:\/\/localhost:11434\/v1"/' config.yaml
+        success "config.yaml updated to use Ollama"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 echo ""
@@ -224,16 +276,30 @@ echo -e "${GREEN}${BOLD}============================================${NC}"
 echo -e "${GREEN}${BOLD}  HydraClaw installation complete!${NC}"
 echo -e "${GREEN}${BOLD}============================================${NC}"
 echo ""
-echo -e "  ${BOLD}Next steps:${NC}"
-echo ""
-echo -e "  1. Add at least one API key:"
-echo -e "     ${CYAN}nano .env${NC}              (or edit config.yaml directly)"
-echo ""
-echo -e "  2. Start the server:"
-echo -e "     ${CYAN}node packages/cli/dist/index.js start${NC}"
-echo ""
-echo -e "  3. Or send a quick test message:"
-echo -e "     ${CYAN}node packages/cli/dist/index.js chat \"Hello\"${NC}"
+
+if [ "$USE_OLLAMA" = true ]; then
+    echo -e "  ${BOLD}Ready to go with Ollama! No API key needed.${NC}"
+    echo ""
+    echo -e "  Start the server:"
+    echo -e "     ${CYAN}node packages/cli/dist/index.js start${NC}"
+    echo ""
+    echo -e "  Or send a quick test message:"
+    echo -e "     ${CYAN}node packages/cli/dist/index.js chat \"Hello\"${NC}"
+else
+    echo -e "  ${BOLD}Next steps:${NC}"
+    echo ""
+    echo -e "  1. Add at least one API key:"
+    echo -e "     ${CYAN}nano .env${NC}              (or edit config.yaml directly)"
+    echo ""
+    echo -e "     Or use Ollama for local AI (no API key):"
+    echo -e "     ${CYAN}./setup.sh --ollama${NC}"
+    echo ""
+    echo -e "  2. Start the server:"
+    echo -e "     ${CYAN}node packages/cli/dist/index.js start${NC}"
+    echo ""
+    echo -e "  3. Or send a quick test message:"
+    echo -e "     ${CYAN}node packages/cli/dist/index.js chat \"Hello\"${NC}"
+fi
 echo ""
 echo -e "  Ports:  ${BOLD}3000${NC} (HTTP)  ${BOLD}3001${NC} (WebSocket)  ${BOLD}9876${NC} (Webhooks)"
 echo -e "  Config: ${CYAN}config.yaml${NC}   Env: ${CYAN}.env${NC}   Data: ${CYAN}./data/${NC}"

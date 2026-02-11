@@ -290,6 +290,8 @@ if [ "$MODE" != "config-only" ]; then
 
     info "Cleaning stale build artifacts..."
     pnpm clean 2>/dev/null || true
+    # Remove stale tsbuildinfo files that may reference paths from another machine
+    find . -name 'tsconfig.tsbuildinfo' -not -path '*/node_modules/*' -delete 2>/dev/null || true
 
     info "Compiling TypeScript across all packages..."
     pnpm build

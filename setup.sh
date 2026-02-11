@@ -248,7 +248,7 @@ if [ "$USE_OLLAMA" = true ]; then
     success "Ollama server running"
 
     # Pull a capable model (qwen2.5 supports tool calling)
-    OLLAMA_MODEL="qwen2.5:0.5b"
+    OLLAMA_MODEL="qwen2.5:3b"
     if ollama list 2>/dev/null | grep -q "$OLLAMA_MODEL"; then
         success "Model $OLLAMA_MODEL already downloaded"
     else
@@ -260,7 +260,7 @@ if [ "$USE_OLLAMA" = true ]; then
     # Patch config.yaml to use Ollama as default
     if [ -f config.yaml ]; then
         sed -i 's/defaultProvider: "anthropic"/defaultProvider: "ollama"/' config.yaml
-        sed -i 's/defaultModel: "claude-sonnet-4-5-20250929"/defaultModel: "qwen2.5:0.5b"/' config.yaml
+        sed -i 's/defaultModel: "claude-sonnet-4-5-20250929"/defaultModel: "qwen2.5:3b"/' config.yaml
         # Uncomment Ollama provider if commented
         sed -i 's/^  # ollama:/  ollama:/' config.yaml
         sed -i 's/^  #   baseUrl: "http:\/\/localhost:11434\/v1"/    baseUrl: "http:\/\/localhost:11434\/v1"/' config.yaml

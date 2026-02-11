@@ -392,6 +392,7 @@ export function createProgram(): Command {
         process.exit(1);
       } finally {
         sqliteStore.close();
+        process.exit(0);
       }
     });
 

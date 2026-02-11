@@ -43,7 +43,7 @@ node packages/cli/dist/index.js start          # start HydraClaw
 > 4. Runs `pnpm install` for all workspace packages
 > 5. Builds every package (`pnpm build`)
 > 6. Creates `config.yaml` and `.env` from templates
-> 7. **With `--ollama`:** Installs Ollama, pulls `qwen2.5:0.5b`, configures it as default
+> 7. **With `--ollama`:** Installs Ollama, pulls `qwen2.5:3b`, configures it as default
 
 If you prefer a manual installation or are on a different OS, continue reading below.
 

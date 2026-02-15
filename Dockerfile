@@ -14,12 +14,28 @@ WORKDIR /app
 
 # Copy package files first for better caching
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+
+# Copy core package.json files
 COPY packages/core/package.json packages/core/
 COPY packages/store/package.json packages/store/
 COPY packages/agent/package.json packages/agent/
 COPY packages/gateway/package.json packages/gateway/
 COPY packages/cli/package.json packages/cli/
 COPY packages/security/package.json packages/security/
+COPY packages/wizard/package.json packages/wizard/
+COPY packages/daemon/package.json packages/daemon/
+COPY packages/routing/package.json packages/routing/
+COPY packages/hooks/package.json packages/hooks/
+COPY packages/memory/package.json packages/memory/
+COPY packages/media/package.json packages/media/
+COPY packages/tui/package.json packages/tui/
+COPY packages/tts/package.json packages/tts/
+COPY packages/pairing/package.json packages/pairing/
+COPY packages/cron/package.json packages/cron/
+COPY packages/skills/package.json packages/skills/
+COPY packages/extensions/package.json packages/extensions/
+COPY packages/auto-reply/package.json packages/auto-reply/
+COPY packages/plugin-sdk/package.json packages/plugin-sdk/
 
 # Copy provider package.json files
 COPY providers/anthropic/package.json providers/anthropic/
@@ -86,6 +102,10 @@ RUN mkdir -p /app/data
 
 # Expose ports
 EXPOSE 3000 3001 9876
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
 
 # Run the gateway
 CMD ["node", "packages/cli/dist/index.js", "start"]

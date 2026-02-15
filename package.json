@@ -1,18 +1,30 @@
 {
   "name": "hydraclaw",
-  "version": "1.0.0",
+  "version": "2026.2.15",
   "private": true,
   "type": "module",
-  "description": "Multi-headed AI assistant platform - unfiltered, multi-provider, multi-channel",
+  "description": "Multi-headed AI assistant platform - multi-provider, multi-channel gateway with extensible messaging integrations",
+  "bin": {
+    "hydraclaw": "packages/cli/dist/index.js"
+  },
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --parallel dev",
-    "start": "node packages/cli/dist/index.js",
+    "start": "node packages/cli/dist/index.js start",
+    "onboard": "node packages/cli/dist/index.js onboard",
+    "tui": "node packages/cli/dist/index.js tui",
+    "daemon:start": "node packages/cli/dist/index.js daemon start",
+    "daemon:stop": "node packages/cli/dist/index.js daemon stop",
+    "daemon:status": "node packages/cli/dist/index.js daemon status",
     "test": "vitest",
+    "test:all": "vitest run",
     "lint": "eslint .",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "scan": "node packages/cli/dist/index.js scan"
   },
   "engines": {
     "node": ">=22.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.0.0",
+  "license": "MIT"
 }

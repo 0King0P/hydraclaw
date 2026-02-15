@@ -4,4 +4,6 @@ packages:
   - providers/_shared
   - channels/*
   - tools/*
+  - skills/*
+  - extensions/*
   - ui

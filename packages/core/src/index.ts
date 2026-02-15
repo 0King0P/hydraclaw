@@ -5,7 +5,24 @@ export type { Channel, ChannelCapabilities } from './types/channel.js';
 export { DEFAULT_CAPABILITIES } from './types/channel.js';
 export type { Tool, ToolDefinition, ToolCall, ToolResult, ToolExecutionGuard, JSONSchema } from './types/tool.js';
 export type { ChatMessage, InboundMessage, OutboundMessage, ImageInput, FileAttachment, ToolCallMessage, MessageEvent } from './types/message.js';
-export type { HydraClawConfig, GatewayConfig, AgentConfig, ProviderConfig, ChannelConfig, ToolConfig, StoreConfig } from './types/config.js';
+export type {
+  HydraClawConfig,
+  GatewayConfig,
+  AgentConfig,
+  ProviderConfig,
+  ChannelConfig,
+  ToolConfig,
+  StoreConfig,
+  MemoryConfig,
+  SkillsConfig,
+  ExtensionsConfig,
+  RoutingConfig,
+  AutoReplyConfig,
+  HooksConfig,
+  CronConfig,
+  VoiceConfig,
+  DaemonConfig,
+} from './types/config.js';
 
 // Core modules
 export { Container } from './container.js';

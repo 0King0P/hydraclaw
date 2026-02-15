@@ -211,7 +211,7 @@ export class RateLimiter {
     if (this.config.keyResolver) {
       return this.config.keyResolver(req);
     }
-    const clientId = (req as Record<string, unknown>).clientId;
+    const clientId = (req as unknown as Record<string, unknown>).clientId;
     if (typeof clientId === 'string') {
       return clientId;
     }

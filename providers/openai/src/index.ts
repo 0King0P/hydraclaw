@@ -195,7 +195,7 @@ function convertMessages(messages: ChatMessage[], systemPrompt?: string): OpenAI
       };
 
       if (msg.toolCalls && msg.toolCalls.length > 0) {
-        assistantMsg.tool_calls = msg.toolCalls.map((tc) => ({
+        assistantMsg.tool_calls = msg.toolCalls.map((tc: any) => ({
           id: tc.id,
           type: 'function' as const,
           function: {
@@ -305,7 +305,7 @@ export class OpenAIProvider implements AIProvider {
       const lastUserIdx = messages.findLastIndex((m) => m.role === 'user');
       if (lastUserIdx >= 0) {
         const lastUser = messages[lastUserIdx];
-        const imageParts: OpenAIContentPart[] = req.images.map((img) => ({
+        const imageParts: OpenAIContentPart[] = req.images.map((img: any) => ({
           type: 'image_url' as const,
           image_url: { url: buildImageUrl(img) },
         }));
@@ -375,7 +375,7 @@ export class OpenAIProvider implements AIProvider {
       const lastUserIdx = messages.findLastIndex((m) => m.role === 'user');
       if (lastUserIdx >= 0) {
         const lastUser = messages[lastUserIdx];
-        const imageParts: OpenAIContentPart[] = req.images.map((img) => ({
+        const imageParts: OpenAIContentPart[] = req.images.map((img: any) => ({
           type: 'image_url' as const,
           image_url: { url: buildImageUrl(img) },
         }));

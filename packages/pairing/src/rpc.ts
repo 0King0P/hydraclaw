@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { createLogger } from '@hydraclaw/core';
 
-const logger = createLogger('pairing:rpc');
+const logger = createLogger({ name: 'pairing:rpc' });
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 const JSON_RPC_VERSION = '2.0';

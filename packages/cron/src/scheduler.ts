@@ -3,7 +3,7 @@ import { createLogger } from '@hydraclaw/core';
 import type { CronJob } from './types.js';
 import { parseCronExpression, getNextOccurrence, isMatch } from './parser.js';
 
-const logger = createLogger('cron:scheduler');
+const logger = createLogger({ name: 'cron:scheduler' });
 
 const DEFAULT_CHECK_INTERVAL_MS = 1_000; // Check every second
 

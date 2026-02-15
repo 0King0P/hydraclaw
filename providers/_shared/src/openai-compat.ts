@@ -110,7 +110,7 @@ function convertMessages(messages: ChatMessage[], systemPrompt?: string): OpenAI
     if (msg.role === 'assistant') {
       const assistantMsg: OpenAIMessage = { role: 'assistant', content: msg.content || null };
       if (msg.toolCalls && msg.toolCalls.length > 0) {
-        assistantMsg.tool_calls = msg.toolCalls.map((tc) => ({
+        assistantMsg.tool_calls = msg.toolCalls.map((tc: any) => ({
           id: tc.id,
           type: 'function' as const,
           function: { name: tc.name, arguments: tc.arguments },

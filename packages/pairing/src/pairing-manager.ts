@@ -12,7 +12,7 @@ import {
 } from './crypto.js';
 import type { KeyPair } from './crypto.js';
 
-const logger = createLogger('pairing:manager');
+const logger = createLogger({ name: 'pairing:manager' });
 
 const PAIRING_CODE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const HEARTBEAT_INTERVAL_MS = 30 * 1000; // 30 seconds

@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { createLogger } from '@hydraclaw/core';
 import type { TTSProvider, TTSVoice, TTSOptions, TTSResult } from './types.js';
 
-const logger = createLogger('tts:openai');
+const logger = createLogger({ name: 'tts:openai' });
 
 const OPENAI_VOICES: TTSVoice[] = [
   { id: 'alloy', name: 'Alloy', language: 'en', gender: 'neutral' },

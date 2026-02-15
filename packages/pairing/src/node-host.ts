@@ -3,7 +3,7 @@ import { cpus, totalmem, freemem } from 'node:os';
 import { createLogger } from '@hydraclaw/core';
 import type { NodeInfo } from './types.js';
 
-const logger = createLogger('pairing:node-host');
+const logger = createLogger({ name: 'pairing:node-host' });
 
 const DEFAULT_HEARTBEAT_INTERVAL_MS = 15_000;
 const VERSION = '1.0.0';

@@ -118,7 +118,7 @@ export class ProviderBuilder {
             yield { type: 'error' as const, content: 'Streaming not supported' };
           },
       init: initHandler ?? (async () => {}),
-      destroy: destroyHandler,
+      destroy: destroyHandler ?? undefined,
     };
   }
 }
@@ -229,7 +229,7 @@ export class ChannelBuilder {
       send: (target: string, message: OutboundMessage) => sendHandler(target, message),
       onMessage: messageHandler ?? undefined,
       init: initHandler ?? (async () => {}),
-      destroy: destroyHandler,
+      destroy: destroyHandler ?? undefined,
     };
   }
 }
@@ -315,7 +315,7 @@ export class ToolBuilder {
       definitions: () => definitions,
       execute: (call: ToolCall) => executeHandler(call),
       init: initHandler ?? (async () => {}),
-      destroy: destroyHandler,
+      destroy: destroyHandler ?? undefined,
     };
   }
 }

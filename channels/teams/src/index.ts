@@ -140,7 +140,7 @@ export class TeamsChannel implements Channel {
 
         // Attach images
         if (message.images && message.images.length > 0) {
-          activity.attachments = message.images.map((image) => ({
+          activity.attachments = message.images.map((image: any) => ({
             contentType: image.mimeType,
             contentUrl: `data:${image.mimeType};base64,${image.data.toString('base64')}`,
             name: image.filename ?? 'image',
@@ -149,7 +149,7 @@ export class TeamsChannel implements Channel {
 
         // Attach files
         if (message.files && message.files.length > 0) {
-          const fileAttachments = message.files.map((file) => ({
+          const fileAttachments = message.files.map((file: any) => ({
             contentType: file.mimeType,
             contentUrl: `data:${file.mimeType};base64,${file.data.toString('base64')}`,
             name: file.filename,

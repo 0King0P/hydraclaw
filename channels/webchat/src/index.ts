@@ -87,12 +87,12 @@ export class WebChatChannel implements Channel {
       type: 'message',
       target,
       content: message.content,
-      images: message.images?.map((img) => ({
+      images: message.images?.map((img: any) => ({
         data: img.data.toString('base64'),
         mimeType: img.mimeType,
         filename: img.filename,
       })),
-      files: message.files?.map((f) => ({
+      files: message.files?.map((f: any) => ({
         data: f.data.toString('base64'),
         mimeType: f.mimeType,
         filename: f.filename,

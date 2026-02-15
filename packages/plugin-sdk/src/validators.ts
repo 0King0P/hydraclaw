@@ -256,10 +256,11 @@ export function validateConfig(
   // Check property types
   if (schema.properties) {
     for (const [key, propSchema] of Object.entries(schema.properties)) {
+      const prop = propSchema as any;
       const value = config[key];
       if (value === undefined) continue;
 
-      const expectedType = propSchema.type;
+      const expectedType = prop.type;
       const actualType = Array.isArray(value) ? 'array' : typeof value;
 
       if (expectedType && actualType !== expectedType) {
@@ -270,10 +271,10 @@ export function validateConfig(
       }
 
       // Enum validation
-      if (propSchema.enum && Array.isArray(propSchema.enum)) {
-        if (!propSchema.enum.includes(value)) {
+      if (prop.enum && Array.isArray(prop.enum)) {
+        if (!prop.enum.includes(value)) {
           errors.push(
-            `Config field "${key}" must be one of: ${propSchema.enum.map(String).join(', ')}`,
+            `Config field "${key}" must be one of: ${prop.enum.map(String).join(', ')}`,
           );
         }
       }

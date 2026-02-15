@@ -152,7 +152,7 @@ export class EmailChannel implements Channel {
 
     // Add file attachments
     if (message.files && message.files.length > 0) {
-      mailOptions.attachments = message.files.map((file) => ({
+      mailOptions.attachments = message.files.map((file: FileAttachment) => ({
         filename: file.filename,
         content: file.data,
         contentType: file.mimeType,

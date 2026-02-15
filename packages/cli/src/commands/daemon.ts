@@ -298,7 +298,7 @@ export function createDaemonCommand(): Command {
             const currentSize = (await stat(LOG_FILE)).size;
             if (currentSize > lastSize) {
               const stream = createReadStream(LOG_FILE, { start: lastSize });
-              stream.on('data', (chunk: Buffer) => {
+              stream.on('data', (chunk: any) => {
                 process.stdout.write(chunk);
               });
               lastSize = currentSize;

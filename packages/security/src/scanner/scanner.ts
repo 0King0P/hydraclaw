@@ -119,7 +119,8 @@ export class VulnerabilityScanner {
     const findings: ScanFinding[] = [];
 
     for (const [id, providerConfig] of Object.entries(config.providers)) {
-      if (providerConfig.apiKey && !providerConfig.apiKey.startsWith('${')) {
+      const provider = providerConfig as any;
+      if (provider.apiKey && !provider.apiKey.startsWith('${')) {
         findings.push({
           severity: 'high',
           category: 'providers',

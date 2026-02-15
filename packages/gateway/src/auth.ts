@@ -194,7 +194,7 @@ export class GatewayAuth {
         const token = authHeader.slice(7);
         const clientId = this.validateToken(token);
         if (clientId) {
-          (req as Record<string, unknown>).clientId = clientId;
+          (req as unknown as Record<string, unknown>).clientId = clientId;
           next();
           return;
         }
@@ -203,7 +203,7 @@ export class GatewayAuth {
       // Try API key header
       const apiKey = req.headers['x-api-key'] as string | undefined;
       if (apiKey && this.validateApiKey(apiKey)) {
-        (req as Record<string, unknown>).clientId = `apikey:${apiKey.slice(0, 8)}`;
+        (req as unknown as Record<string, unknown>).clientId = `apikey:${apiKey.slice(0, 8)}`;
         next();
         return;
       }
@@ -213,7 +213,7 @@ export class GatewayAuth {
       if (queryToken) {
         const clientId = this.validateToken(queryToken);
         if (clientId) {
-          (req as Record<string, unknown>).clientId = clientId;
+          (req as unknown as Record<string, unknown>).clientId = clientId;
           next();
           return;
         }

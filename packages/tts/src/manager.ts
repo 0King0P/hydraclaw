@@ -1,7 +1,7 @@
 import { createLogger } from '@hydraclaw/core';
 import type { TTSProvider, TTSVoice, TTSOptions, TTSResult, STTProvider, STTOptions, STTResult } from './types.js';
 
-const logger = createLogger('tts:manager');
+const logger = createLogger({ name: 'tts:manager' });
 
 export interface VoiceManagerConfig {
   defaultProvider?: string;

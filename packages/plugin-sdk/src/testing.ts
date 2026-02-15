@@ -48,7 +48,6 @@ export function createMockLogger(): MockLogger {
 
   const logger: MockLogger = {
     entries,
-    trace: log('trace'),
     debug: log('debug'),
     info: log('info'),
     warn: log('warn'),
@@ -64,7 +63,7 @@ export function createMockLogger(): MockLogger {
     getByLevel(level: LogLevel) {
       return entries.filter((e) => e.level === level);
     },
-  };
+  } as MockLogger;
 
   return logger;
 }
@@ -146,13 +145,12 @@ export function createMockContext(
   const container = createMockContainer();
 
   return {
-    config: config ?? {},
     logger: mockLogger,
     bus: mockBus,
     container,
     mockLogger,
     mockBus,
-  };
+  } as unknown as MockPluginContext;
 }
 
 // ---------------------------------------------------------------------------

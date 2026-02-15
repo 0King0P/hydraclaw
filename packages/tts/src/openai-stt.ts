@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { createLogger } from '@hydraclaw/core';
 import type { STTProvider, STTOptions, STTResult } from './types.js';
 
-const logger = createLogger('tts:openai-stt');
+const logger = createLogger({ name: 'tts:openai-stt' });
 
 const DEFAULT_MODEL = 'whisper-1';
 

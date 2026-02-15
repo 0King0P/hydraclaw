@@ -221,7 +221,7 @@ export class Agent {
     for (const [, tool] of this.registry.tools) {
       const t = tool as Tool;
       const defs = t.definitions();
-      if (defs.some(d => d.name === call.name)) {
+      if (defs.some((d: any) => d.name === call.name)) {
         try {
           return await t.execute(call);
         } catch (err) {

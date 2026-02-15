@@ -122,7 +122,7 @@ export function createSkillsCommand(): Command {
           console.log(chalk.dim(`  ${skill.description}`));
         }
         if (skill.triggers && skill.triggers.length > 0) {
-          console.log(chalk.dim(`  Triggers: ${skill.triggers.map((t) => t.pattern).join(', ')}`));
+          console.log(chalk.dim(`  Triggers: ${skill.triggers.map((t: any) => t.pattern).join(', ')}`));
         }
       } catch (err) {
         console.error(chalk.red(`Installation failed: ${err instanceof Error ? err.message : String(err)}`));
@@ -302,12 +302,12 @@ async function loadSkillDetails(
       version: skill.version,
       description: skill.description,
       author: skill.author,
-      triggers: skill.triggers?.map((t) => ({
+      triggers: skill.triggers?.map((t: any) => ({
         type: t.type,
         pattern: t.pattern,
         description: t.description,
       })),
-      tools: skill.tools?.map((t) => ({
+      tools: skill.tools?.map((t: any) => ({
         name: t.name,
         description: t.description,
       })),

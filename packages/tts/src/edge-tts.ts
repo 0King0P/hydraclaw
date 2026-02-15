@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { createLogger } from '@hydraclaw/core';
 import type { TTSProvider, TTSVoice, TTSOptions, TTSResult } from './types.js';
 
-const logger = createLogger('tts:edge');
+const logger = createLogger({ name: 'tts:edge' });
 
 const EDGE_TTS_URL = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1';
 const VOICE_LIST_URL = 'https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list';
@@ -97,7 +97,7 @@ export class EdgeTTSProvider implements TTSProvider {
       throw new Error(`Failed to fetch voice list: ${response.status} ${response.statusText}`);
     }
 
-    const voiceData: EdgeVoiceInfo[] = await response.json();
+    const voiceData: EdgeVoiceInfo[] = await response.json() as EdgeVoiceInfo[];
 
     this.cachedVoices = voiceData.map((v) => ({
       id: v.ShortName,
